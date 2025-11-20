@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Pagamento";
+    var code = ViewBag.ReservationCode as string ?? "";
+}
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h2 class="h5 mb-3 text-center">Pagamento (simulado)</h2>
+          <p class="text-muted text-center small mb-4">Insira os dados do cartão para simular o pagamento.</p>
+
+          <form asp-action="PaymentPage" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="code" value="@code" />
+
+            <div class="mb-3">
+              <label class="form-label">Nome no cartão</label>
+              <input name="cardHolder" class="form-control" placeholder="Nome completo" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Número do cartão</label>
+              <input name="cardNumber" class="form-control" placeholder="0000 0000 0000 0000" />
+            </div>
+
+            <div class="row">
+              <div class="col-6 mb-3">
+                <label class="form-label">Validade</label>
+                <input name="expiry" class="form-control" placeholder="MM/AA" />
+              </div>
+              <div class="col-6 mb-3">
+                <label class="form-label">CVV</label>
+                <input name="cvv" class="form-control" placeholder="123" />
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <a href="@Url.Action("PaymentConfirmation", "Client", new { code = code })" class="btn btn-outline-secondary">Voltar</a>
+              <button type="submit" class="btn btn-primary">Pagar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

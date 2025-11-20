@@ -1,0 +1,25 @@
+@using Microsoft.AspNetCore.Http
+@{
+    // checar sessão para não mostrar botão para administradores
+}
+
+@* Lista de reservas (visão administrativa) *@
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.ReservationCode</td>
+        <td>@item.Status</td>
+        <td>@item.ReservationDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+        <td>@item.CustomerName</td>
+        <td>@item.SeatNumber</td>
+        <td>@item.Origin</td>
+        <td>@item.Destination</td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Editar</a>
+            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info">Detalhes</a>
+            <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline">
+                <button type="submit" class="btn btn-outline-danger">Remover</button>
+            </form>
+        </td>
+    </tr>
+}
