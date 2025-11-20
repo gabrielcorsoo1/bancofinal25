@@ -1,0 +1,67 @@
+@model IEnumerable<AtlasAir.Models.Seat>
+@{
+    var flight = ViewData["Flight"] as AtlasAir.Models.Flight;
+    ViewData["Title"] = $"Assentos disponíveis - Voo {flight?.Id}";
+}
+
+<h2>Assentos disponíveis - Voo @flight?.Id</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (!Model.Any())
+{
+    <p>Nenhum assento disponível.</p>
+}
+else
+{
+    <form asp-action="Purchase" method="post" id="purchaseForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="flightId" value="@flight?.Id" />
+        <div class="row g-2">
+            @foreach (var s in Model)
+            {
+                <div class="col-auto">
+                    <div class="card p-2">
+                        <div>@s.SeatNumber (@s.Class)</div>
+                        <div class="mt-2">
+                            <button type="button" class="btn btn-sm btn-outline-success select-seat" data-seat="@s.Id">Selecionar</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="mt-4">
+            <input type="hidden" id="selectedSeat" name="seatId" />
+            <button type="submit" class="btn btn-primary" id="btnBuy" disabled>Comprar</button>
+            <a asp-action="Search" class="btn btn-link">Voltar</a>
+        </div>
+    </form>
+}
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.select-seat').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                // desabilita todos e marca este
+                document.querySelectorAll('.select-seat').forEach(b => b.classList.remove('btn-success'));
+                document.querySelectorAll('.select-seat').forEach(b => b.classList.add('btn-outline-success'));
+                this.classList.remove('btn-outline-success');
+                this.classList.add('btn-success');
+
+                var seatId = this.getAttribute('data-seat');
+                document.getElementById('selectedSeat').value = seatId;
+                document.getElementById('btnBuy').disabled = false;
+            });
+        });
+
+        // proteção: não enviar se nao houver seatId
+        document.getElementById('purchaseForm')?.addEventListener('submit', function (e) {
+            var seatId = document.getElementById('selectedSeat').value;
+            if (!seatId) { e.preventDefault(); alert('Selecione um assento.'); }
+        });
+    </script>
+}
