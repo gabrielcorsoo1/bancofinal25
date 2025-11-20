@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Pagamento confirmado";
+    var code = ViewBag.ReservationCode as string;
+}
+
+<h2>Pagamento confirmado</h2>
+
+<div class="alert alert-success">
+    Reserva criada: <strong>@code</strong>
+</div>
+
+<p>
+    <a asp-controller="Client" asp-action="DashboardTest" class="btn btn-primary">Ir para minha área</a>
+    <a asp-controller="Reservation" asp-action="Index" class="btn btn-link">Ver reservas</a>
+</p>
